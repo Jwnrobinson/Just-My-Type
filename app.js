@@ -1,91 +1,96 @@
-$(document).ready(function(){
-$("keyboard-upper-container").hide();
-});
+let $playButton = $("#play-button");
+let $content = $("#target");
+let $highlight = $("#yellow-block");
+let $highlightPosition = 0;
+let $keyUpper = $("#keyboard-upper-container");
+let $keyLower = $("#keyboard-lower-container");
+let $sentences = ['ten ate neite ate nee enet ite ate inet ent eate', 'Too ato too nOt enot one totA not anot tOO aNot', 'oat itain oat tain nate eate tea anne inant nean', 'itant eate anot eat nato inate eat anot tain eat', 'nee ene ate ite tent tiet ent ine ene ete ene ate'];
+let $sentenceNumber = 0;
+let $sentence = $sentences[$sentenceNumber];
+let $charNumber = 0;
+let $letter = $sentence.substring($charNumber, $charNumber + 1);
+let $mistakes = 0;
+let $isTimeCounting = false;
+let $startDate;
+let $startTime;
 
-$(document).keydown(function(s){
-if(s.keycode == 16) {
-    $("keyboard-lower-container").hide();
-    $("keyboard-upper-container").show();   
-}
-});
-$(document).keyup(function(s){
-    if(s.keycode == 16) {
-        $("keyboard-upper-container").hide();
-        $("keyboard-lower-container").show(); 
-    }
-});
+$($playButton).click(function() {
+    $($content).css("display", "block");
+    
+$(document).keydown(function (s1){
+    if (s1.which === 16) {
+        $($keyUpper).css("display", "block");
+        $($keyLower).css ("display", "none");
 
+        $(document).keyup(function (s2){
+            if (s2.which === 16) {
+                $($keyUpper).css("display", "none");
+                $($keyLower).css ("display", "block");
 
-$(document).keypress(function(s){
-if(s.keycode == '') {
-    $(document.css("background-color", "yellow"));
-} 
-    });
-
-$("sentence")
-    let sentences = ['ten ate neite ate nee enet ite ate inet ent eate', 
-                     'Too ato too nOt enot one totA not anot tOO aNot',
-                     'oat itain oat tain nate eate tea anne inant nean', 
-                     'itant eate anot eat nato inate eat anot tain eat', 
-                     'nee ene ate ite tent tiet ent ine ene ete ene ate'];
-
-let lettersIndex = 0;
-let sentenceIndex = 0;
-let sentence;
-let sentEnd;
-let letters;
-let target;
-let checkLetters;
-
-printSentence();
-$(document).keypress( function(){
-    typeLetters();
-    Feedback();
-});
-function printSentence(){
-    sentence = sentences[sentenceIndex];
-    letters = sentence.split ('', sentence.length);
-    checkLetters = letters;
-    lettersIndex = 0;
-
-    do{
-        $("#sentence").append ('<span id="letters${lettersIndex}">${letters[lettersIndex]}</span>');
-        letters++;
-    } while(lettersIndex < sentence.length);
-    lettersIndex = 1;
-    sentenceIndex++;
-    $('#letters${[0]}').css("background-color", "yellow");
-    if (lettersIndex > 0) {
-        $('#letters${lettersIndex}').prev().css("background-color", "white");
-    };
-
-    lettersIndex++;
-    sentEnd = lettersIndex - 1;
-
-    if (sentence.length=== lettersIndex -1) {
-    $("#sentence").empty();
-        printSentence();
-    };
-
-    function target () {
-        $("#target-letter").empty();
-        if (letters[lettersIndex]=== ' ') {
-            $("target-letter").append('<span id ="target">[ SPACE ]</span>');
-        } else if (lettersIndex < sentence.length){
-            $("#target-letter").append('<span id="target">${letters[lettersIndex]}</span>');
-        };
-
-        };
-    function Feedback (){
-        $(document).keypress(function(){
-            if (letters[lettersIndex] == $('#letters${lettersIndex}').keypress()){
-                $("#Feedback").empty();
-                $("#feedback").append ('<span class="glyphicon glyphicon-ok"></span>');
-            } else if (letters[lettersIndex] != s.key.charCodeAt()){
-                $("#feedback").empty();
-                $("#feedback").append('<span class="glyphicon glyphicon-remove"></span>');
             }
         })
     }
+})
+});
 
+$(document).keydown(function (s) {
+    let $key = $(" " + s.which);
+    $($key).css ("background-color", "yellow");
+    $(document).keyup(function () {
+        $($key).css("background-color", "white");
+
+    });
+
+    $("#sentence").text($sentence);
+    $("#target-letter").text($letter);
+    $(document).keydown(function(s) {
+        if ($isTimeCounting === false) {
+            $startDate = new Date();
+            $startTime =$startDate.getTime();
+            $isTimeCounting = true;
+        }
+
+        if (s.which == $sentences[$sentenceNumber].charCodeAt($charNumber)) {
+            let $right = $("<span>√</span>");
+            $($right).addClass ('green');
+            $($right).appendTo("#feedback");
+
+           if ($highlightPosition += 21);
+           $($highlight).css ("margin-left", $highlightPositon + "px");
+            $charNumber++;
+            $letter = $sentence.substring($charNumber, $charNumber + 1);
+            $("#target-letter").text($letter);
+
+            if ($charNumber === $sentence.length) {
+                $sentenceNumber++;
+                if ($sentenceNumber === $sentences.length){
+                    let $endDate = new Date();
+                    let $endTime = $endDate.getTime();
+                    let$minutes = ($endTime-$startTime)/60000;
+                    $wpm = Math.round(54/$minutes - 2 * $mistakes);
+
+                    var j = confirm ("You type" + $wpm + "words per minute.  Would you like to try again?");
+
+                    if (j == true) {
+                        location.reload();
+                    } else {
+                        $sentence = $sentences[$sentenceNumber];
+                        $("#sentence").text($sentence);
+
+                        $charNumber = 0;
+                        $letter = $sentence.substring($charNumber, $charNumber + 1);
+                        $("#target-letter").text($letter);
+
+                        $highlightPosition = 0;
+                        $($highlight).css ("margin-left", $highlightPosition + "px");
+                        $("#feedback").text("");
+                    }
+            }
+        } else {
+            let $wrong = $("<span>x</span>");
+            $($wrong).addClass('red');
+            $($wrong).appendTo("#feedback");
+            $mistakes++;
+        }
     };
+})})
