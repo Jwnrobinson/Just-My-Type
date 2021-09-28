@@ -14,30 +14,33 @@ let $isTimeCounting = false;
 let $startDate;
 let $startTime;
 
-$($playButton).click(function() {
-    $($content).css("display", "block");
     
-$(document).keydown(function (s1){
-    if (s1.which === 16) {
-        $($keyUpper).css("display", "block");
-        $($keyLower).css ("display", "none");
+document.addEventListener("DOMContentLoaded", function(){
+    $($keyUpper).hide();
+   
 
         $(document).keyup(function (s2){
             if (s2.which === 16) {
-                $($keyUpper).css("display", "none");
-                $($keyLower).css ("display", "block");
+                $($keyUpper).show();
+                $($keyLower).hide();
 
             }
         })
+        $(document).keyup(function (s2){
+            if (s2.which === 16) {
+                $($keyUpper).hide();
+                $($keyLower).show();
     }
 })
-});
+;
+$('#sentence').text($sentenceNumber);
+$('#target-letter').text($charNumber);
+
 
 $(document).keydown(function (s) {
-    let $key = $(" " + s.which);
-    $($key).css ("background-color", "yellow");
-    $(document).keyup(function () {
-        $($key).css("background-color", "white");
+    s.preventDefault();
+    $('#' + s.which).addClass('highlughted');
+    
 
     });
 
@@ -92,5 +95,4 @@ $(document).keydown(function (s) {
             $($wrong).appendTo("#feedback");
             $mistakes++;
         }
-    };
-})})
+    }})})
